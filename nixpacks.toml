@@ -1,0 +1,11 @@
+[phases.setup]
+cmds = ['cd frontend && npm install']
+
+[phases.build]
+cmds = ['cd frontend && npm run build']
+
+[phases.install]
+cmds = ['pip install -r backend/requirements.txt']
+
+[start]
+cmd = 'cd backend && flask db upgrade && gunicorn app:app --bind 0.0.0.0:$PORT --workers 2'
