@@ -1,11 +1,14 @@
-[phases.setup]
-cmds = ['cd frontend && npm install']
+providers = ["python", "node"]
 
-[phases.build]
-cmds = ['cd frontend && npm run build']
+[phases.setup]
+nixPkgs = ["nodejs", "python311"]
+cmds = ['cd frontend && npm install']
 
 [phases.install]
 cmds = ['pip install -r backend/requirements.txt']
+
+[phases.build]
+cmds = ['cd frontend && npm run build']
 
 [start]
 cmd = 'cd backend && flask db upgrade && gunicorn app:app --bind 0.0.0.0:$PORT --workers 2'
