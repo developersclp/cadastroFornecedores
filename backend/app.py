@@ -2,7 +2,7 @@ import os
 import sys
 from flask import Flask, send_from_directory, session
 from flask_cors import CORS
-from flask_migrate import Migrate
+from flask_migrate import Migrate, upgrade
 from datetime import timedelta
 from config import Config
 from models import db
@@ -55,8 +55,16 @@ def create_app():
         
         return {'message': 'API Controle de Fornecedores - Grupo Rojemac'}, 200
     
-    # Inicializar banco e seed data
+    # Inicializar banco, rodar migrações e seed data
     with app.app_context():
+        try:
+            # Roda as migrações automaticamente no startup (Railway safe)
+            migrations_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'migrations')
+            upgrade(directory=migrations_dir)
+            print("Migrações executadas com sucesso.")
+        except Exception as e:
+            print(f"Erro ao rodar migrações automaticamente: {e}")
+            
         seed_data()
     
     return app
